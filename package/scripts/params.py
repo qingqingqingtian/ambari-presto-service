@@ -32,5 +32,5 @@ memory_configs = ['query.max-memory-per-node', 'query.max-memory']
 
 host_info = config['clusterHostInfo']
 
-host_level_params = config['hostLevelParams']
+host_level_params = config['ambariLevelParams']
 java_home = host_level_params['java_home']
