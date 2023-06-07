@@ -15,14 +15,14 @@
 from resource_management.libraries.script.script import Script
 from resource_management.core.resources.system import Execute
 from resource_management.core.exceptions import ClientComponentHasNoStatus
-from common import PRESTO_CLI_URL
+from common import TRINO_CLI_URL
 
 
 class Cli(Script):
     def install(self, env):
-        Execute('mkdir -p /usr/lib/presto/bin')
-        Execute('wget --no-check-certificate {0} -O /usr/lib/presto/bin/presto-cli'.format(PRESTO_CLI_URL))
-        Execute('chmod +x /usr/lib/presto/bin/presto-cli')
+        Execute('mkdir -p /usr/lib/trino/bin')
+        Execute('wget --no-check-certificate {0} -O /usr/lib/trino/bin/trino-cli'.format(TRINO_CLI_URL))
+        Execute('chmod +x /usr/lib/trino/bin/trino-cli')
 
     def status(self, env):
         raise ClientComponentHasNoStatus()

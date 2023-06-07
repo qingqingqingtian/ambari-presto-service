@@ -42,7 +42,7 @@ node.properties.xml
 
   <property>
     <name>plugin.config-dir</name>
-    <value>/etc/presto/catalog</value>
+    <value>/etc/trino/catalog</value>
     <description>
       Configuration directory for plugins. This is where you should place
       connector property files.
@@ -51,7 +51,7 @@ node.properties.xml
 
   <property>
     <name>plugin.dir</name>
-    <value>/usr/lib/presto/lib/plugin</value>
+    <value>/usr/lib/trino/lib/plugin</value>
     <description>
       Library directory for plugins.
     </description>

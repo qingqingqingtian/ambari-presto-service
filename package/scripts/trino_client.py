@@ -13,7 +13,7 @@
 # limitations under the License.
 
 """
-Simple client to communicate with a Presto server.
+Simple client to communicate with a Trino server.
 """
 from httplib import HTTPConnection, HTTPException
 import logging
@@ -37,13 +37,13 @@ SLEEP_INTERVAL = 10
 logging.basicConfig(stream=sys.stdout)
 _LOGGER = logging.getLogger(__name__)
 
-def smoketest_presto(client, all_hosts):
+def smoketest_trino(client, all_hosts):
     ensure_nodes_are_up(client, all_hosts)
     ensure_catalogs_are_available(client)
     client.execute_query('select * from nation', schema='sf1', catalog='tpch')
     rows = client.get_rows()
     if len(rows) != 25:
-        raise RuntimeError('Presto server failed to return the correct \
+        raise RuntimeError('Trino server failed to return the correct \
 number of rows from nation table in TPCH connector. Expected 25 but got {0}'.format(len(rows)))
 
 def ensure_catalogs_are_available(client):
@@ -60,7 +60,7 @@ def ensure_catalogs_are_available(client):
         else:
             break
     if not rows:
-        raise RuntimeError('Presto server failed to load all catalogs within \
+        raise RuntimeError('Trino server failed to load all catalogs within \
 {0} seconds.'.format(RETRY_TIMEOUT))
 
 
@@ -77,7 +77,7 @@ def ensure_nodes_are_up(client, all_hosts):
         else:
             break
     if not result:
-        raise RuntimeError('Presto server failed to start within \
+        raise RuntimeError('Trino server failed to start within \
 {0} seconds.'.format(RETRY_TIMEOUT))
 
     # Verify that the nodes we expect to have registered with the Discovery
@@ -86,27 +86,28 @@ def ensure_nodes_are_up(client, all_hosts):
     are_expected_nodes_up = False
     while elapsed_time < RETRY_TIMEOUT:
         client.execute_query(SYSTEM_RUNTIME_NODES)
-        nodes_returned_from_presto = []
+        nodes_returned_from_trino = []
         for row in client.get_rows():
-            nodes_returned_from_presto.append(row[0])
-        if len(nodes_returned_from_presto) == len(all_hosts):
+            nodes_returned_from_trino.append(row[0])
+        if len(nodes_returned_from_trino) == len(all_hosts):
             are_expected_nodes_up = True
             break
         else:
             time.sleep(SLEEP_INTERVAL)
             _LOGGER.debug('Elapsed time {0}'.format(elapsed_time))
             _LOGGER.debug(
-                'Number of hosts returned from Presto {0} do not match number of hosts specified by user {1}'.format(
-                nodes_returned_from_presto, all_hosts))
+                'Number of hosts returned from Trino {0} do not match number of hosts specified by user {1}'.format(
+                nodes_returned_from_trino, all_hosts))
             elapsed_time += SLEEP_INTERVAL
     if not are_expected_nodes_up:
         raise RuntimeError(
-                'Number of hosts returned from Presto {0} do not equal the number of hosts specified by user {1}'.format(
-                nodes_returned_from_presto, all_hosts))
+                'Number of hosts returned from Trino {0} do not equal the number of hosts specified by user {1}'.format(
+                nodes_returned_from_trino, all_hosts))
 
 # This class was copied more or less verbatim from
 # https://github.com/prestodb/presto-admin/blob/master/prestoadmin/prestoclient.py
-class PrestoClient:
+# https://github.com/trinodb/trino-admin/blob/master/prestoadmin/prestoclient.py
+class TrinoClient:
     response_from_server = {}
     # rows returned by the query
     rows = []
@@ -129,15 +130,15 @@ class PrestoClient:
 
     def execute_query(self, sql, schema='sf1', catalog='tpch'):
         """
-        Execute a query connecting to Presto server using passed parameters.
+        Execute a query connecting to Trino server using passed parameters.
 
-        Client sends http POST request to the Presto server, page:
+        Client sends http POST request to the Trino server, page:
         '/v1/statement'. Header information should
-        include: X-Presto-Catalog, X-Presto-Schema,  X-Presto-User
+        include: X-Trino-Catalog, X-Trino-Schema,  X-Trino-User
 
         Args:
             sql: SQL query to be executed
-            schema: Presto schema to be used while executing query
+            schema: Trino schema to be used while executing query
                 (default=default)
             catalog: Catalog to be used by the server
 
@@ -158,9 +159,9 @@ class PrestoClient:
 
         self.clear_old_results()
 
-        headers = {'X-Presto-Catalog': catalog,
-                   'X-Presto-Schema': schema,
-                   'X-Presto-User': self.user}
+        headers = {'X-Trino-Catalog': catalog,
+                   'X-Trino-Schema': schema,
+                   'X-Trino-User': self.user}
         answer = ''
         try:
             _LOGGER.info('Connecting to server at: ' + self.server +
@@ -183,17 +184,17 @@ class PrestoClient:
             _LOGGER.info('Query executed successfully')
             return True
         except (HTTPException, socket.error):
-            _LOGGER.error('Error connecting to presto server at: ' +
+            _LOGGER.error('Error connecting to Trino server at: ' +
                           self.server + ':' + str(self.port))
             return False
         except ValueError as e:
-            _LOGGER.error('Error connecting to Presto server: ' + str(e) +
+            _LOGGER.error('Error connecting to Trino server: ' + str(e) +
                           ' error from server: ' + answer)
             raise e
 
     def get_response_from(self, uri):
         """
-        Sends a GET request to the Presto server at the specified next_uri
+        Sends a GET request to the Trino server at the specified next_uri
         and updates the response
         """
         try:
@@ -205,7 +206,7 @@ class PrestoClient:
             _LOGGER.info('GET request successful for uri: ' + uri)
             return True
         except (HTTPError, URLError) as e:
-            _LOGGER.error('Error opening the presto response uri: ' +
+            _LOGGER.error('Error opening the trino response uri: ' +
                           str(e.reason))
             return False
 

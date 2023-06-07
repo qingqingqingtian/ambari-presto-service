@@ -18,16 +18,16 @@ import os.path as path
 from resource_management.libraries.script.script import Script
 from resource_management.core.resources.system import Execute
 from resource_management.core.exceptions import ExecutionFailed, ComponentIsNotRunning
-from common import PRESTO_RPM_URL, PRESTO_RPM_NAME, create_connectors, \
+from common import TRINO_RPM_URL, TRINO_RPM_NAME, create_connectors, \
     delete_connectors
-from presto_client import smoketest_presto, PrestoClient
+from trino_client import smoketest_trino, TrinoClient
 
 
 class Coordinator(Script):
     def install(self, env):
         from params import java_home
-        Execute('wget --no-check-certificate {0}  -O /tmp/{1}'.format(PRESTO_RPM_URL, PRESTO_RPM_NAME))
-        Execute('export JAVA8_HOME={0} && rpm -i /tmp/{1}'.format(java_home, PRESTO_RPM_NAME))
+        Execute('wget --no-check-certificate {0}  -O /tmp/{1}'.format(TRINO_RPM_URL, TRINO_RPM_NAME))
+        Execute('export JAVA11_HOME={0} && rpm -i /tmp/{1}'.format(java_home, TRINO_RPM_NAME))
         self.configure(env)
 
     def stop(self, env):
@@ -39,11 +39,11 @@ class Coordinator(Script):
             host_info
         self.configure(env)
         Execute('{0} start'.format(daemon_control_script))
-        if 'presto_worker_hosts' in host_info.keys():
-            all_hosts = host_info['presto_worker_hosts'] + \
-                        host_info['presto_coordinator_hosts']
+        if 'trino_worker_hosts' in host_info.keys():
+            all_hosts = host_info['trino_worker_hosts'] + \
+                        host_info['trino_coordinator_hosts']
         else:
-            all_hosts = host_info['presto_coordinator_hosts']
+            all_hosts = host_info['trino_coordinator_hosts']
        # smoketest_presto(PrestoClient('localhost', 'root', config_properties['http-server.http.port']), all_hosts)
 
     def status(self, env):
@@ -65,7 +65,7 @@ class Coordinator(Script):
             for key, value in node_properties.iteritems():
                 f.write(key_val_template.format(key, value))
             f.write(key_val_template.format('node.id', str(uuid.uuid4())))
-            f.write(key_val_template.format('node.data-dir', '/var/lib/presto'))
+            f.write(key_val_template.format('node.data-dir', '/var/lib/trino'))
 
         with open(path.join(config_directory, 'jvm.config'), 'w') as f:
             f.write(jvm_config['jvm.config'])

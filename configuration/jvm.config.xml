@@ -19,7 +19,7 @@
   <property>
     <name>jvm.config</name>
     <value>-server
--Xmx16G
+-Xmx8G
 -XX:+UseG1GC
 -XX:+UseGCOverheadLimit
 -XX:+ExplicitGCInvokesConcurrent
