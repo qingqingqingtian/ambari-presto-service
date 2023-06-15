@@ -51,7 +51,7 @@ node.properties.xml
 
   <property>
     <name>plugin.dir</name>
-    <value>/usr/lib/trino/lib/plugin</value>
+    <value>/usr/lib/trino/plugin</value>
     <description>
       Library directory for plugins.
     </description>

@@ -19,12 +19,22 @@
   <property>
     <name>jvm.config</name>
     <value>-server
--Xmx8G
--XX:+UseG1GC
--XX:+UseGCOverheadLimit
--XX:+ExplicitGCInvokesConcurrent
--XX:+HeapDumpOnOutOfMemoryError
--XX:OnOutOfMemoryError=kill -9 %p</value>
+        -Xmx8G
+        -XX:MaxRAMPercentage=80
+        -XX:G1HeapRegionSize=32M
+        -XX:+ExplicitGCInvokesConcurrent
+        -XX:+ExitOnOutOfMemoryError
+        -XX:+HeapDumpOnOutOfMemoryError
+        -XX:-OmitStackTraceInFastThrow
+        -XX:ReservedCodeCacheSize=512M
+        -XX:PerMethodRecompilationCutoff=10000
+        -XX:PerBytecodeRecompilationCutoff=10000
+        -Djdk.attach.allowAttachSelf=true
+        -Djdk.nio.maxCachedBufferSize=2000000
+        -XX:+UnlockDiagnosticVMOptions
+        -XX:+UseAESCTRIntrinsics
+        # Disable Preventive GC for performance reasons (JDK-8293861)
+        -XX:-G1UsePreventiveGC</value>
     <description>
        A list of command line options used for launching the Java Virtual
        Machine. The format of the file must be one option per line. These

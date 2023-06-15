@@ -27,7 +27,7 @@ class Coordinator(Script):
     def install(self, env):
         from params import java_home
         Execute('wget --no-check-certificate {0}  -O /tmp/{1}'.format(TRINO_RPM_URL, TRINO_RPM_NAME))
-        Execute('export JAVA11_HOME={0} && rpm -i /tmp/{1}'.format(java_home, TRINO_RPM_NAME))
+        Execute('export JAVA_HOME={0} && rpm -i /tmp/{1}'.format(java_home, TRINO_RPM_NAME))
         self.configure(env)
 
     def stop(self, env):
