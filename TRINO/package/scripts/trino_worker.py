@@ -70,7 +70,7 @@ class Worker(Script):
                 if key in memory_configs:
                     value += 'GB'
                 f.write(key_val_template.format(key, value))
-            f.write(key_val_template.format('coordinator', 'false'))
+            f.write(key_val_template.format('coordinator', 'true'))
 
         create_connectors(node_properties, connectors_to_add)
         delete_connectors(node_properties, connectors_to_delete)
