@@ -63,6 +63,9 @@ class Worker(Script):
         with open(path.join(config_directory, 'jvm.config'), 'w') as f:
             f.write(jvm_config['jvm.config'])
 
+        with open(path.join(config_directory, 'env.sh'), 'w') as f:
+            f.write('JAVA_HOME=/usr/lib/jdk17.0.7')
+
         with open(path.join(config_directory, 'config.properties'), 'w') as f:
             for key, value in config_properties.iteritems():
                 if key == 'query.queue-config-file' and value.strip() == '':
