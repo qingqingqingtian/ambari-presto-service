@@ -30,7 +30,7 @@
           <name>TRINO_COORDINATOR</name>
           <displayName>Trino coordinator</displayName>
           <category>MASTER</category>
-          <cardinality>1</cardinality>
+          <cardinality>1-3</cardinality>
           <versionAdvertised>true</versionAdvertised>
           <commandScript>
             <script>scripts/trino_coordinator.py</script>
