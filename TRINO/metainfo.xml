@@ -69,6 +69,10 @@
         <config-type>config.properties</config-type>
         <config-type>jvm.config</config-type>
         <config-type>connectors.properties</config-type>
+        <config-type>resource-groups.json</config-type>
+        <config-type>resource-groups.properties</config-type>
+        <config-type>session-property-config.json</config-type>
+        <config-type>session-property-config.properties</config-type>
       </configuration-dependencies>
 
       <themes>

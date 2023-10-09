@@ -22,6 +22,25 @@ node_properties = config['configurations']['node.properties']
 jvm_config = config['configurations']['jvm.config']
 config_properties = config['configurations']['config.properties']
 
+t_resource_groups_json = config['configurations']['resource-groups.json']
+t_resource_groups_properties = config['configurations']['resource-groups.properties']
+t_session_property_config_json = config['configurations']['session-property-config.json']
+t_session_property_config_properties = config['configurations']['session-property-config.properties']
+
+# 如果是组件补充这几个
+# select * from am.clusterconfig c where c.type_name in(
+# 'resource-groups.json',
+# 'resource-groups.properties',
+# 'session-property-config.json',
+# 'session-property-config.properties'
+# )
+# and config_id  in (
+# select config_id from `am`.`serviceconfigmapping` a where a.service_config_id ='454'
+# )
+# select * from `am`.`serviceconfig` a where a.service_name ='Trino';
+# select * from `am`.`serviceconfigmapping` a where a.service_config_id ='454';
+
+
 connectors_to_add = config['configurations']['connectors.properties']['connectors.to.add']
 connectors_to_delete = config['configurations']['connectors.properties']['connectors.to.delete']
 

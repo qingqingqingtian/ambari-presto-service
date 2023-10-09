@@ -57,7 +57,8 @@ class Coordinator(Script):
                 raise ef
 
     def configure(self, env):
-        from params import node_properties, jvm_config, config_properties, \
+        from params import node_properties, jvm_config, config_properties, t_resource_groups_json, t_resource_groups_properties, \
+            t_session_property_config_json, t_session_property_config_properties, \
             config_directory, memory_configs, host_info, connectors_to_add, connectors_to_delete
         key_val_template = '{0}={1}\n'
 
@@ -82,6 +83,19 @@ class Coordinator(Script):
                 f.write(key_val_template.format(key, value))
             f.write(key_val_template.format('coordinator', 'true'))
             f.write(key_val_template.format('discovery-server.enabled', 'true'))
+
+        with open(path.join(config_directory, 'resource-groups.json'), 'w') as f:
+            f.write(t_resource_groups_json['content'])
+
+        with open(path.join(config_directory, 'resource-groups.properties'), 'w') as f:
+            f.write(t_resource_groups_properties['content'])
+
+        with open(path.join(config_directory, 'session-property-config.json'), 'w') as f:
+            f.write(t_session_property_config_json['content'])
+
+        with open(path.join(config_directory, 'session-property-config.properties'), 'w') as f:
+            f.write(t_session_property_config_properties['content'])
+
 
         create_connectors(node_properties, connectors_to_add)
         delete_connectors(node_properties, connectors_to_delete)
